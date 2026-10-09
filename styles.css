@@ -4,7 +4,8 @@ body {
   margin: 0;
   font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   color: #1f2937;
-  background: #fdf2f8;
+  background: linear-gradient(135deg, #93c5fd 0%, #f9a8d4 45%, #ffffff 100%) fixed;
+  min-height: 100vh;
 }
 
 .layout { display: flex; min-height: 100vh; }
@@ -12,7 +13,7 @@ body {
 .sidebar {
   width: 240px;
   flex-shrink: 0;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.85);
   border-right: 1px solid #fbcfe8;
   padding: 1rem;
   position: sticky;
