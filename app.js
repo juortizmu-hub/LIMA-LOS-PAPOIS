@@ -112,22 +112,45 @@ $("#chat-form").addEventListener("submit", async (e) => {
   pending.textContent = "Escribiendo...";
   $("#chat-log").appendChild(pending);
 
+  const enviar = $("#chat-form button[type=submit]");
+  enviar.disabled = true;
+  const controlador = new AbortController();
+  const limite = setTimeout(() => controlador.abort(), 30000); // no se queda cargando para siempre
+
   try {
     const res = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ messages: chatHistory.slice(-20) }),
+      signal: controlador.signal,
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Error del servidor");
+    let data = {};
+    try {
+      data = await res.json();
+    } catch {
+      throw new Error("El servidor devolvió una respuesta inesperada. Revisa los logs de Vercel.");
+    }
+    if (!res.ok) throw new Error(data.error || `El servidor respondió con error ${res.status}.`);
     chatHistory.push({ role: "assistant", content: data.reply });
     pending.textContent = data.reply;
   } catch (err) {
     chatHistory.pop();
-    pending.textContent = "No pude responder en este momento. Intenta de nuevo más tarde.";
+    pending.classList.add("error");
+    pending.textContent = mensajeDeError(err, controlador.signal.aborted);
     console.error(err);
+  } finally {
+    clearTimeout(limite);
+    enviar.disabled = false;
+    input.focus();
   }
 });
+
+// Convierte un fallo en un mensaje que explica la causa
+function mensajeDeError(err, abortado) {
+  if (abortado) return "La respuesta tardó demasiado. Intenta de nuevo con un mensaje más corto.";
+  if (err instanceof TypeError) return "No hay conexión con el servidor. Revisa tu internet e intenta de nuevo.";
+  return err.message || "No pude responder en este momento.";
+}
 
 // ---------- Estado de ánimo ----------
 function renderMood() {

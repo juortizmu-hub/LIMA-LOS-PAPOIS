@@ -335,6 +335,9 @@
   });
 
   // ---------- Perfil ----------
+  // Perfil en modo lectura por defecto; el botón "Editar perfil" cambia a modo edición
+  let perfilEditando = false;
+
   async function renderPerfil(uid) {
     const { data: perfil } = await sb.from("profiles").select("*").eq("user_id", uid).maybeSingle();
     if (!perfil) {
@@ -346,27 +349,41 @@
       .order("created_at", { ascending: false }).limit(50);
     const datos = await cargarDatos(posts || []);
     const propio = usuario && usuario.id === uid;
+    if (!propio) perfilEditando = false;
 
-    const edicion = propio
-      ? `<form id="perfil-form" class="card">
-           <label>Nombre<input id="perfil-nombre" type="text" maxlength="40" required value="${escapeHtml(perfil.nombre)}" /></label>
-           <label>Sobre mí<textarea id="perfil-bio" rows="3" maxlength="300">${escapeHtml(perfil.bio || "")}</textarea></label>
-           <label>Foto de perfil (máx. 2 MB)<input id="perfil-foto" type="file" accept="image/*" /></label>
-           <div class="row"><button type="submit">Guardar perfil</button><span id="perfil-status" class="hint" role="status"></span></div>
-         </form>`
-      : usuario
-        ? `<button type="button" class="social-btn report" data-report-user="${uid}">🚩 Reportar a esta persona</button>`
-        : "";
-
-    $("#perfil-contenido").innerHTML = `
+    const detalles = [perfil.universidad, perfil.carrera].filter(Boolean).map(escapeHtml).join(" · ");
+    const lectura = `
       <div class="card perfil-cabecera">
         ${avatarHtml(perfil, "avatar-grande")}
-        <div>
+        <div class="perfil-datos">
           <h2>${escapeHtml(perfil.nombre)}</h2>
+          ${detalles ? `<p class="perfil-detalles">🎓 ${detalles}</p>` : ""}
           <p>${escapeHtml(perfil.bio || (propio ? "Cuéntanos algo sobre ti." : "Sin descripción."))}</p>
           <p class="hint">${(posts || []).length} publicaciones</p>
+          ${propio
+            ? `<button type="button" class="social-btn" data-toggle-edit="1">✏️ Editar perfil</button>`
+            : usuario ? `<button type="button" class="social-btn report" data-report-user="${uid}">🚩 Reportar a esta persona</button>` : ""}
         </div>
-      </div>
+      </div>`;
+
+    const edicion = propio && perfilEditando
+      ? `<form id="perfil-form" class="card perfil-form">
+           <h2>Editar perfil</h2>
+           <label>Nombre<input id="perfil-nombre" type="text" maxlength="40" required value="${escapeHtml(perfil.nombre)}" /></label>
+           <label>Universidad<input id="perfil-universidad" type="text" maxlength="80" value="${escapeHtml(perfil.universidad || "")}" /></label>
+           <label>Carrera<input id="perfil-carrera" type="text" maxlength="80" value="${escapeHtml(perfil.carrera || "")}" /></label>
+           <label>Biografía / descripción<textarea id="perfil-bio" rows="3" maxlength="300">${escapeHtml(perfil.bio || "")}</textarea></label>
+           <label>Foto de perfil (máx. 2 MB)<input id="perfil-foto" type="file" accept="image/*" /></label>
+           <div class="row">
+             <button type="submit">Guardar cambios</button>
+             <button type="button" class="danger" data-cancel-edit-perfil="1">Cancelar</button>
+             <span id="perfil-status" class="hint" role="status"></span>
+           </div>
+         </form>`
+      : "";
+
+    $("#perfil-contenido").innerHTML = `
+      ${lectura}
       ${edicion}
       <h2>Publicaciones</h2>
       <div id="perfil-posts">${(posts || []).length
@@ -460,6 +477,14 @@
       }
       return;
     }
+    if (d.toggleEdit !== undefined) {
+      perfilEditando = !perfilEditando;
+      return renderPerfil(usuario.id);
+    }
+    if (d.cancelEditPerfil !== undefined) {
+      perfilEditando = false;
+      return renderPerfil(usuario.id);
+    }
     if (d.perfil) {
       showView("perfil");
       return renderPerfil(d.perfil);
@@ -510,7 +535,7 @@
   }
 
   document.addEventListener("click", (e) => {
-    const t = e.target.closest("button[data-like], button[data-toggle-comments], button[data-reply], button[data-edit-post], button[data-cancel-edit], button[data-share], button[data-perfil], button[data-ir-post], button[data-report-post], button[data-report-comment], button[data-report-user], button[data-delete-post], button[data-delete-comment]");
+    const t = e.target.closest("button[data-like], button[data-toggle-comments], button[data-reply], button[data-edit-post], button[data-cancel-edit], button[data-share], button[data-perfil], button[data-ir-post], button[data-report-post], button[data-report-comment], button[data-report-user], button[data-delete-post], button[data-delete-comment], button[data-toggle-edit], button[data-cancel-edit-perfil]");
     if (!t) return;
     reaccionar(t).catch((err) => alert(mensajeError(err)));
   });
@@ -563,15 +588,17 @@
     if (form.id === "perfil-form") {
       e.preventDefault();
       const nombre = $("#perfil-nombre").value.trim();
+      const universidad = $("#perfil-universidad").value.trim();
+      const carrera = $("#perfil-carrera").value.trim();
       const bio = $("#perfil-bio").value.trim();
       const foto = $("#perfil-foto").files[0];
       if (!nombre) return;
-      if (contieneContenidoBloqueado(nombre) || contieneContenidoBloqueado(bio)) return alert(AVISO_FILTRO);
+      if ([nombre, universidad, carrera, bio].some(contieneContenidoBloqueado)) return alert(AVISO_FILTRO);
       if (foto && (!foto.type.startsWith("image/") || foto.size > MAX_IMAGEN_BYTES)) {
         return alert("Elige una imagen de hasta 2 MB.");
       }
       $("#perfil-status").textContent = "Guardando…";
-      const cambios = { nombre, bio };
+      const cambios = { nombre, universidad, carrera, bio };
       if (foto) {
         const ruta = `${usuario.id}/${Date.now()}-${foto.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
         const { error: errorFoto } = await sb.storage.from(BUCKET_AVATAR).upload(ruta, foto);
@@ -585,6 +612,7 @@
       $("#perfil-status").textContent = "";
       if (error) return alert(mensajeError(error));
       perfiles.delete(usuario.id);
+      perfilEditando = false;
       renderPerfil(usuario.id);
       cargarMuro();
     }

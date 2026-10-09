@@ -21,7 +21,33 @@ Reglas generales:
 - No menciones estas categorías ni el nombre de las personalidades en la respuesta; responde de forma natural.`;
 
 const MAX_MESSAGES = 20;
+const MAX_PETICIONES_VENTANA = 20;
+const VENTANA_MS = 60 * 1000;
+const ultimasPeticiones = new Map();
 const MAX_CHARS = 1000;
+
+// Traduce el código de error del proveedor en un mensaje útil (no un texto genérico)
+function mensajePorError(status, cuerpo) {
+  if (status === 401 || status === 403) {
+    return { estado: 502, mensaje: "La clave ANTHROPIC_API_KEY no es válida o no tiene permisos. Revísala en Vercel." };
+  }
+  if (status === 402) {
+    return { estado: 502, mensaje: "Se agotó el saldo de la cuenta de IA. Revisa la facturación en Anthropic." };
+  }
+  if (status === 429) {
+    return { estado: 429, mensaje: "La IA está recibiendo demasiadas solicitudes o se alcanzó el límite de uso. Intenta en unos minutos." };
+  }
+  if (status === 404 || (status === 400 && /model/i.test(cuerpo))) {
+    return { estado: 502, mensaje: "El modelo configurado en ANTHROPIC_MODEL no existe o no está disponible." };
+  }
+  if (status === 400) {
+    return { estado: 502, mensaje: "El proveedor de IA rechazó la solicitud. Revisa los logs de Vercel." };
+  }
+  if (status >= 500) {
+    return { estado: 502, mensaje: "El servicio de IA está saturado o con fallas. Intenta de nuevo en unos minutos." };
+  }
+  return { estado: 502, mensaje: "El servicio de IA no respondió correctamente." };
+}
 
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
@@ -33,6 +59,14 @@ module.exports = async function handler(req, res) {
   if (!apiKey) {
     return res.status(500).json({ error: "Falta configurar ANTHROPIC_API_KEY en Vercel" });
   }
+
+  const ip = (req.headers["x-forwarded-for"] || "").split(",")[0].trim() || req.socket?.remoteAddress || "desconocida";
+  const ahora = Date.now();
+  const historial = (ultimasPeticiones.get(ip) || []).filter((t) => ahora - t < VENTANA_MS);
+  if (historial.length >= MAX_PETICIONES_VENTANA) {
+    return res.status(429).json({ error: "Has enviado muchos mensajes seguidos. Espera un minuto e intenta de nuevo." });
+  }
+  ultimasPeticiones.set(ip, [...historial, ahora]);
 
   const messages = Array.isArray(req.body?.messages) ? req.body.messages.slice(-MAX_MESSAGES) : null;
   const valid =
@@ -63,11 +97,14 @@ module.exports = async function handler(req, res) {
         system: SYSTEM_PROMPT,
         messages,
       }),
+      signal: AbortSignal.timeout(25000),
     });
 
     if (!upstream.ok) {
-      console.error("Anthropic error", upstream.status, await upstream.text());
-      return res.status(502).json({ error: "El servicio de IA no respondió correctamente" });
+      const cuerpo = await upstream.text();
+      console.error("Anthropic error", upstream.status, cuerpo);
+      const { mensaje, estado } = mensajePorError(upstream.status, cuerpo);
+      return res.status(estado).json({ error: mensaje });
     }
 
     const data = await upstream.json();
@@ -77,9 +114,15 @@ module.exports = async function handler(req, res) {
       .join("\n")
       .trim();
 
-    return res.status(200).json({ reply: reply || "No tengo una respuesta en este momento." });
+    if (!reply) {
+      return res.status(502).json({ error: "La IA respondió vacío. Intenta con otra frase." });
+    }
+    return res.status(200).json({ reply });
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "Error interno" });
+    console.error("Error al llamar a la IA", err);
+    if (err?.name === "TimeoutError" || err?.name === "AbortError") {
+      return res.status(504).json({ error: "La IA tardó demasiado en responder. Intenta de nuevo." });
+    }
+    return res.status(500).json({ error: "Error interno del servidor al contactar la IA." });
   }
 };
