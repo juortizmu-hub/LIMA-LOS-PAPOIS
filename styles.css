@@ -8,37 +8,39 @@ body {
   min-height: 100vh;
 }
 
-.layout { display: flex; min-height: 100vh; }
+/* Diseño con barra de navegación superior */
+.layout { display: flex; flex-direction: column; min-height: 100vh; }
 
 .sidebar {
-  width: 250px;
+  width: 100%;
   flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(8px);
-  border-right: 2px solid #fbcfe8;
-  padding: 1.25rem 1rem;
+  border-bottom: 2px solid #fbcfe8;
+  padding: 0.9rem 1.5rem;
   position: sticky;
   top: 0;
-  height: 100vh;
-  overflow-y: auto;
-  box-shadow: 4px 0 20px rgba(59, 130, 246, 0.12);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.12);
 }
 
 .brand {
   font-weight: 900;
-  font-size: 1.5rem;
-  margin-bottom: 1.25rem;
-  padding: 0.5rem 0.75rem;
+  font-size: 1.4rem;
+  padding: 0.4rem 1rem;
   border-radius: 16px;
   background: linear-gradient(90deg, #2563eb, #ec4899);
   color: #fff;
-  text-align: center;
   letter-spacing: 0.02em;
   box-shadow: 0 6px 14px rgba(236, 72, 153, 0.35);
 }
 
-.sidebar nav { display: flex; flex-direction: column; gap: 0.4rem; }
-.sidebar hr { border: none; border-top: 2px dashed #f9a8d4; margin: 0.75rem 0; }
+.sidebar nav { display: flex; flex-direction: row; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+.sidebar hr { display: none; }
 
 .nav-item {
   text-align: left;
@@ -62,7 +64,7 @@ body {
   box-shadow: 0 6px 14px rgba(236, 72, 153, 0.35);
 }
 
-.content { flex: 1; padding: 2rem; max-width: 900px; }
+.content { flex: 1; padding: 2rem; max-width: 900px; width: 100%; margin: 0 auto; }
 
 .view { display: none; }
 .view.active { display: block; animation: pop 0.35s ease; }
