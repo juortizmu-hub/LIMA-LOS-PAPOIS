@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Amigo UCV · Salud mental</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="brand">Amigo UCV</div>
+        <nav>
+          <button class="nav-item active" data-view="inicio">Inicio</button>
+          <button class="nav-item" data-view="chat">Chat privado</button>
+          <button class="nav-item" data-view="muro">Muro de posts</button>
+          <button class="nav-item" data-view="animo">Mi estado de ánimo</button>
+          <button class="nav-item" data-view="vision">Visión board</button>
+          <hr />
+          <button class="nav-item" data-view="apoyo">Apoyo profesional</button>
+          <button class="nav-item" data-view="academico">Guía académica</button>
+          <button class="nav-item" data-view="config">Configuración / Otros recursos</button>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <!-- Página de bienvenida -->
+        <section id="view-inicio" class="view active">
+          <h1>Bienvenido a Amigo UCV</h1>
+          <p>Un espacio pensado para ti, estudiante de la Universidad Central de Venezuela. Aquí puedes hablar en privado, registrar cómo te sientes y compartir con la comunidad, de forma pública o anónima.</p>
+
+          <h2>Síguenos en redes de la UCV</h2>
+          <ul class="social-links">
+            <li><a href="https://www.ucv.ve" target="_blank" rel="noopener">Sitio web oficial</a></li>
+            <li><a href="https://www.instagram.com/ucvenezuela/" target="_blank" rel="noopener">Instagram</a></li>
+            <li><a href="https://x.com/ucvenezuela" target="_blank" rel="noopener">X (Twitter)</a></li>
+            <li><a href="https://www.facebook.com/UniversidadCentraldeVenezuela" target="_blank" rel="noopener">Facebook</a></li>
+            <li><a href="https://www.youtube.com/@ucvenezuela" target="_blank" rel="noopener">YouTube</a></li>
+          </ul>
+
+          <p class="disclaimer">Esta herramienta no reemplaza la atención profesional. Si estás en peligro, llama al 911.</p>
+        </section>
+
+        <!-- Chat privado -->
+        <section id="view-chat" class="view">
+          <h1>Chat privado</h1>
+          <p class="hint">Conversación confidencial. Los mensajes no se guardan en el servidor ni se almacenan al recargar la página.</p>
+          <div id="chat-log" class="chat-log" aria-live="polite"></div>
+          <form id="chat-form" class="chat-form">
+            <input id="chat-input" type="text" placeholder="Escribe lo que quieras compartir..." maxlength="1000" required />
+            <button type="submit">Enviar</button>
+          </form>
+        </section>
+
+        <!-- Muro de posts -->
+        <section id="view-muro" class="view">
+          <h1>Muro de posts</h1>
+
+          <form id="post-form" class="card">
+            <textarea id="post-text" rows="3" maxlength="500" placeholder="¿Qué quieres compartir?" required></textarea>
+            <div class="row">
+              <label>Emoción
+                <select id="post-emotion">
+                  <option>Esperanza</option>
+                  <option>Calma</option>
+                  <option>Gratitud</option>
+                  <option>Ansiedad</option>
+                  <option>Tristeza</option>
+                  <option>Motivación</option>
+                </select>
+              </label>
+              <label>Visibilidad
+                <select id="post-visibility">
+                  <option value="publico">Público</option>
+                  <option value="privado">Privado</option>
+                </select>
+              </label>
+              <label>Identidad
+                <select id="post-identity">
+                  <option value="anonimo">Anónimo</option>
+                  <option value="ficticio">Nombre ficticio</option>
+                </select>
+              </label>
+            </div>
+            <button type="submit">Publicar</button>
+          </form>
+
+          <h2>Publicaciones</h2>
+          <div id="feed"></div>
+        </section>
+
+        <!-- Estado de ánimo -->
+        <section id="view-animo" class="view">
+          <h1>Mi estado de ánimo</h1>
+          <form id="mood-form" class="card">
+            <p>¿Cómo te sientes hoy?</p>
+            <div class="row">
+              <label><input type="radio" name="mood" value="1" required /> Muy mal</label>
+              <label><input type="radio" name="mood" value="2" /> Mal</label>
+              <label><input type="radio" name="mood" value="3" /> Regular</label>
+              <label><input type="radio" name="mood" value="4" /> Bien</label>
+              <label><input type="radio" name="mood" value="5" /> Muy bien</label>
+            </div>
+            <textarea id="mood-note" rows="2" maxlength="300" placeholder="Nota opcional"></textarea>
+            <button type="submit">Registrar</button>
+          </form>
+          <h2>Historial</h2>
+          <ul id="mood-history" class="list"></ul>
+        </section>
+
+        <!-- Visión board -->
+        <section id="view-vision" class="view">
+          <h1>Visión board</h1>
+          <p class="hint">Escribe metas, frases o cosas que quieres lograr.</p>
+          <form id="vision-form" class="row">
+            <input id="vision-text" type="text" maxlength="200" placeholder="Nueva meta o sueño" required />
+            <button type="submit">Añadir</button>
+          </form>
+          <div id="vision-board" class="vision-grid"></div>
+        </section>
+
+        <!-- Apoyo profesional -->
+        <section id="view-apoyo" class="view">
+          <h1>Apoyo profesional</h1>
+          <p>Si necesitas hablar con un profesional, acude al servicio de orientación o bienestar estudiantil de tu facultad.</p>
+          <p class="disclaimer">En caso de emergencia, llama al 911.</p>
+        </section>
+
+        <!-- Guía académica -->
+        <section id="view-academico" class="view">
+          <h1>Guía académica</h1>
+          <p>Consejos para organizar el estudio y manejar la presión académica: divide las tareas en pasos pequeños, toma pausas regulares y pide ayuda a tus profesores o compañeros cuando la necesites.</p>
+        </section>
+
+        <!-- Configuración -->
+        <section id="view-config" class="view">
+          <h1>Configuración / Otros recursos</h1>
+          <form id="config-form" class="card">
+            <label>Nombre ficticio (para publicaciones)
+              <input id="config-alias" type="text" maxlength="30" placeholder="Ej. Estudiante Estrella" />
+            </label>
+            <button type="submit">Guardar</button>
+          </form>
+          <button id="clear-data" class="danger">Borrar mis datos guardados</button>
+          <h2>Otros recursos</h2>
+          <ul class="social-links">
+            <li><a href="https://www.ucv.ve" target="_blank" rel="noopener">Sitio web de la UCV</a></li>
+          </ul>
+        </section>
+      </main>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>
