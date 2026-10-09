@@ -30,9 +30,11 @@
           <span aria-hidden="true">☰</span> Menú <span class="menu-arrow" aria-hidden="true">⌄</span>
         </button>
         <nav id="main-nav">
-          <button class="nav-item active" data-view="inicio">Inicio</button>
+          <button class="nav-item active" data-view="muro">Muro de posts</button>
+          <button class="nav-item" data-view="inicio">Inicio</button>
           <button class="nav-item" data-view="chat">Chat privado</button>
-          <button class="nav-item" data-view="muro">Muro de posts</button>
+          <button class="nav-item" data-view="notificaciones">🔔 Notificaciones <span id="nav-badge" class="nav-badge" hidden></span></button>
+          <button class="nav-item" data-view="perfil">Mi perfil</button>
           <button class="nav-item" data-view="animo">Mi estado de ánimo</button>
           <button class="nav-item" data-view="vision">Visión board</button>
           <button class="nav-item" data-view="personaje">Mi personaje 🍌</button>
@@ -102,6 +104,12 @@
           <h1>Muro de posts</h1>
           <p id="social-status" class="hint" role="status"></p>
 
+          <form id="buscar-form" class="row buscar-form" role="search">
+            <input id="buscar-input" type="text" maxlength="50" placeholder="Buscar personas o publicaciones" aria-label="Buscar" />
+            <button type="submit">Buscar</button>
+          </form>
+          <div id="buscar-resultados"></div>
+
           <div class="card" id="auth-card">
             <form id="auth-form" class="row">
               <input id="auth-email" type="text" inputmode="email" autocomplete="email" placeholder="Correo" />
@@ -139,6 +147,7 @@
                 <select id="post-identity">
                   <option value="anonimo">Anónimo</option>
                   <option value="ficticio">Apodo de mi perfil</option>
+                  <option value="perfil">Mi nombre (perfil)</option>
                 </select>
               </label>
             </div>
@@ -184,6 +193,18 @@
             <button type="submit">Añadir</button>
           </form>
           <div id="vision-board" class="vision-grid"></div>
+        </section>
+
+        <!-- Notificaciones: actividad real sobre tus publicaciones -->
+        <section id="view-notificaciones" class="view">
+          <h1>Notificaciones</h1>
+          <ul id="notificaciones-lista" class="list"></ul>
+        </section>
+
+        <!-- Perfil de usuario: foto, nombre, descripción y publicaciones -->
+        <section id="view-perfil" class="view">
+          <h1>Mi perfil</h1>
+          <div id="perfil-contenido"><p class="hint">Inicia sesión para ver tu perfil.</p></div>
         </section>
 
         <!-- Mi personaje: galería, emociones, accesorios y colores -->

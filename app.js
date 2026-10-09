@@ -69,7 +69,7 @@ function showView(name) {
   // El fondo espacial cambia según la sección (ver body[data-view] en styles.css)
   document.body.dataset.view = name;
 }
-showView("inicio");
+showView("muro"); // entrada directa al muro de publicaciones
 document.querySelectorAll(".nav-item").forEach((btn) =>
   btn.addEventListener("click", () => {
     showView(btn.dataset.view);
