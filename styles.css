@@ -72,12 +72,13 @@ body[data-view="animo"] {
 }
 
 body[data-view="vision"] {
-  /* Planetas: uno naranja con anillo y otro azul */
+  /* La Luna de la NASA, en la esquina superior derecha: assets/luna.jpg */
   background-image:
-    var(--stars),
-    radial-gradient(circle at 85% 20%, #f97316 0 60px, transparent 61px),
-    radial-gradient(circle at 15% 85%, #2563eb 0 90px, transparent 91px),
+    url("assets/luna.jpg"),
     linear-gradient(180deg, #0a0614 0%, #1b1033 100%);
+  background-size: 320px auto, cover;
+  background-position: right 2rem top 2rem, center;
+  background-repeat: no-repeat, no-repeat;
 }
 
 body[data-view="apoyo"] {
