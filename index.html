@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=8" />
+    <link rel="stylesheet" href="styles.css?v=9" />
   </head>
   <body>
     <!-- Estrellas y planetas decorativos que cruzan la pantalla (no interactivos) -->
@@ -166,6 +166,30 @@
         <!-- Configuración -->
         <section id="view-config" class="view">
           <h1>Configuración / Otros recursos</h1>
+          <h2>Mi personaje</h2>
+          <div class="card">
+            <div id="avatar-preview" class="avatar-preview" role="img" aria-label="Vista previa de tu personaje"></div>
+            <form id="avatar-form" class="card">
+              <label>Forma
+                <select id="avatar-shape">
+                  <option value="redondo">Redondito</option>
+                  <option value="alto">Alto</option>
+                  <option value="pequeno">Pequeño</option>
+                </select>
+              </label>
+              <label>Color del cuerpo
+                <input id="avatar-body" type="color" value="#fdd835" />
+              </label>
+              <label>Color de la ropa
+                <input id="avatar-cloth" type="color" value="#1e63c9" />
+              </label>
+              <label>Color del cabello
+                <input id="avatar-hair" type="color" value="#1d2a36" />
+              </label>
+              <button type="submit">Guardar personaje</button>
+            </form>
+          </div>
+
           <h2>Perfiles y apodos</h2>
           <p class="hint">Crea perfiles con un apodo. El perfil activo se usa cuando publicas con nombre ficticio.</p>
           <form id="profile-form" class="card">

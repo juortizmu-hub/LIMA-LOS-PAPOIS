@@ -287,6 +287,69 @@ $("#clear-data").addEventListener("click", () => {
   location.reload();
 });
 
+// ---------- Mi personaje (muñeco con cuerpo y colores) ----------
+// Dibujo propio en SVG: el usuario elige forma y colores, y el muñeco se dibuja con esos valores.
+const FORMAS_PERSONAJE = {
+  redondo: { w: 130, h: 150 },
+  alto: { w: 100, h: 190 },
+  pequeno: { w: 120, h: 115 },
+};
+const COLORES_DEFECTO = { forma: "redondo", cuerpo: "#fdd835", ropa: "#1e63c9", cabello: "#1d2a36" };
+const HEX = /^#[0-9a-f]{6}$/i;
+
+function dibujarPersonaje(p) {
+  const f = FORMAS_PERSONAJE[p.forma] || FORMAS_PERSONAJE.redondo;
+  const cuerpo = HEX.test(p.cuerpo) ? p.cuerpo : COLORES_DEFECTO.cuerpo;
+  const ropa = HEX.test(p.ropa) ? p.ropa : COLORES_DEFECTO.ropa;
+  const cabello = HEX.test(p.cabello) ? p.cabello : COLORES_DEFECTO.cabello;
+  const x = 100 - f.w / 2;
+  const top = 215 - f.h;
+  const ex = f.w * 0.2;
+  const ey = top + f.h * 0.35;
+  return `<svg viewBox="0 0 200 230" xmlns="http://www.w3.org/2000/svg">
+    <rect x="${x - 10}" y="${top + f.h * 0.45}" width="14" height="${f.h * 0.35}" rx="7" fill="${cabello}" />
+    <rect x="${x + f.w - 4}" y="${top + f.h * 0.45}" width="14" height="${f.h * 0.35}" rx="7" fill="${cabello}" />
+    <rect x="${x}" y="${top}" width="${f.w}" height="${f.h}" rx="${f.w / 2}" fill="${cuerpo}" stroke="#1d2a36" stroke-width="3" />
+    <rect x="${x}" y="${top + f.h * 0.6}" width="${f.w}" height="${f.h * 0.4}" rx="22" fill="${ropa}" stroke="#1d2a36" stroke-width="3" />
+    <ellipse cx="100" cy="${top + 6}" rx="${f.w * 0.42}" ry="12" fill="${cabello}" />
+    <circle cx="${100 - ex}" cy="${ey}" r="11" fill="#fff" stroke="#1d2a36" stroke-width="2" />
+    <circle cx="${100 + ex}" cy="${ey}" r="11" fill="#fff" stroke="#1d2a36" stroke-width="2" />
+    <circle cx="${100 - ex + 2}" cy="${ey + 2}" r="5" fill="#1d2a36" />
+    <circle cx="${100 + ex + 2}" cy="${ey + 2}" r="5" fill="#1d2a36" />
+    <path d="M ${100 - 14} ${top + f.h * 0.72} Q 100 ${top + f.h * 0.82} ${100 + 14} ${top + f.h * 0.72}" fill="none" stroke="#1d2a36" stroke-width="3" stroke-linecap="round" />
+  </svg>`;
+}
+
+function leerFormularioPersonaje() {
+  return {
+    forma: $("#avatar-shape").value,
+    cuerpo: $("#avatar-body").value,
+    ropa: $("#avatar-cloth").value,
+    cabello: $("#avatar-hair").value,
+  };
+}
+
+function mostrarPersonajeGuardado() {
+  const guardado = { ...COLORES_DEFECTO, ...store.get("personaje", {}) };
+  $("#avatar-shape").value = guardado.forma;
+  $("#avatar-body").value = guardado.cuerpo;
+  $("#avatar-cloth").value = guardado.ropa;
+  $("#avatar-hair").value = guardado.cabello;
+  $("#avatar-preview").innerHTML = dibujarPersonaje(guardado);
+}
+
+$("#avatar-form").addEventListener("input", () => {
+  $("#avatar-preview").innerHTML = dibujarPersonaje(leerFormularioPersonaje());
+});
+
+$("#avatar-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  store.set("personaje", leerFormularioPersonaje());
+  alert("Personaje guardado.");
+});
+
+mostrarPersonajeGuardado();
+
 // ---------- Inicio ----------
 renderFeed();
 renderMood();

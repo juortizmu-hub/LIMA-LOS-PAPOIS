@@ -354,6 +354,30 @@ button.danger:active { box-shadow: 0 2px 0 var(--yellow-deep); }
   font-size: 1rem;
 }
 
+/* Mi personaje: vista previa del muñeco */
+.avatar-preview {
+  width: min(220px, 70vw);
+  aspect-ratio: 200 / 230;
+  margin: 0 auto;
+  background: var(--sky-soft);
+  border: 3px dashed var(--sky);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+}
+.avatar-preview svg { width: 100%; height: 100%; }
+input[type="color"] {
+  width: 3rem;
+  height: 2.2rem;
+  padding: 0;
+  border: 2px solid var(--sky);
+  border-radius: 10px;
+  background: var(--white);
+  cursor: pointer;
+}
+
 /* Botón de apoyo: tarjeta llamativa */
 .refugio-btn {
   display: inline-flex;
