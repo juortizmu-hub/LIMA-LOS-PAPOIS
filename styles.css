@@ -354,6 +354,18 @@ button.danger:active { box-shadow: 0 2px 0 var(--yellow-deep); }
   font-size: 1rem;
 }
 
+/* Reportar publicaciones */
+.report-btn {
+  margin-top: 0.6rem;
+  padding: 0.3rem 0.85rem;
+  font-size: 0.85rem;
+  background: var(--yellow);
+  color: var(--ink);
+  box-shadow: 0 3px 0 var(--yellow-deep);
+}
+.report-btn:hover { background: #ffe56b; }
+.report-btn:active { box-shadow: none; }
+
 /* Mi personaje: vista previa del muñeco */
 .avatar-preview {
   width: min(220px, 70vw);

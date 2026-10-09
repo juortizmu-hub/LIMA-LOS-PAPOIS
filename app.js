@@ -38,7 +38,16 @@ const PALABRAS_BLOQUEADAS = [
   "puta", "puto", "perra", "zorra", "maricon", "pendej", "imbecil", "idiota", "estupid", "retrasad",
 ];
 
-const AVISO_FILTRO = "Tu texto contiene palabras no permitidas. Cámbialo e inténtalo de nuevo.";
+// Amenazas, burlas y humillaciones: expresiones que pueden herir aunque no tengan palabras fuertes
+const PATRONES_DANINOS = [
+  /\bte (voy a|vamos a) (matar|golpear|pegar|lastimar|hacer dano)/, // amenazas
+  /\bnadie te (quiere|extrana|necesita)\b/, // burlas sobre sentimientos
+  /\beres (un |una )?(fracasad[oa]|inutil|bueno para nada|perdedor[a]?|loser|patetic[oa])\b/, // humillaciones
+  /\b(todos|los) \w+ (son|sois) (unos |unas )?(ladrones|sucios|basura|animales)\b/, // discriminación generalizada
+];
+
+const AVISO_FILTRO =
+  "Parece que este mensaje podría herir a alguien. ¿Quieres cambiar algunas palabras? Tu texto sigue aquí para que lo edites.";
 
 // Quita tildes y pasa a minúsculas para que "Múltiple" y "multiple" se comparen igual
 const normalizarTexto = (s) =>
@@ -46,10 +55,20 @@ const normalizarTexto = (s) =>
 
 function contieneContenidoBloqueado(texto) {
   const limpio = normalizarTexto(texto);
-  return PALABRAS_BLOQUEADAS.some((termino) => {
+  const palabra = PALABRAS_BLOQUEADAS.some((termino) => {
     const patron = new RegExp(`\\b${normalizarTexto(termino).replace(/ /g, "\\s+")}`);
     return patron.test(limpio);
   });
+  return palabra || PATRONES_DANINOS.some((patron) => patron.test(limpio));
+}
+
+// ---------- Reportes de publicaciones ----------
+// Un post con 3 o más reportes se oculta a los demás (el autor sigue viéndolo).
+// Los reportes se guardan en el navegador: sin servidor no se comparten entre personas.
+const UMBRAL_REPORTES = 3;
+
+function getReportes() {
+  return store.get("reportes", {});
 }
 
 // ---------- Navegación (barra lateral siempre visible) ----------
@@ -109,7 +128,10 @@ $("#chat-form").addEventListener("submit", async (e) => {
 // ---------- Muro de posts ----------
 function renderFeed() {
   const posts = store.get("posts", []);
-  const visible = posts.filter((p) => p.visibility === "publico" || p.own);
+  const reportes = getReportes();
+  const visible = posts.filter(
+    (p) => p.own || (p.visibility === "publico" && (reportes[p.id] || 0) < UMBRAL_REPORTES)
+  );
   $("#feed").innerHTML = visible.length
     ? visible
         .slice()
@@ -117,14 +139,29 @@ function renderFeed() {
         .map((p) => {
           const author = p.identity === "anonimo" ? "Anónimo" : escapeHtml(p.alias || "Estudiante");
           const tag = p.visibility === "privado" ? " · Privado (solo tú lo ves)" : "";
+          const oculto = p.own && (reportes[p.id] || 0) >= UMBRAL_REPORTES ? " · Oculto a otros por reportes" : "";
+          const reportar = p.id
+            ? `<button type="button" class="report-btn" data-report="${p.id}">Reportar</button>`
+            : "";
           return `<article class="post">
-            <div class="post-meta">${author} · ${escapeHtml(p.emotion)} · ${new Date(p.date).toLocaleString("es")}${tag}</div>
+            <div class="post-meta">${author} · ${escapeHtml(p.emotion)} · ${new Date(p.date).toLocaleString("es")}${tag}${oculto}</div>
             <p>${escapeHtml(p.text)}</p>
+            ${reportar}
           </article>`;
         })
         .join("")
     : `<p class="hint">Aún no hay publicaciones.</p>`;
 }
+
+$("#feed").addEventListener("click", (e) => {
+  const id = e.target.dataset.report;
+  if (!id) return;
+  const reportes = getReportes();
+  reportes[id] = (reportes[id] || 0) + 1;
+  store.set("reportes", reportes);
+  alert("Gracias por avisar. Revisaremos este contenido.");
+  renderFeed();
+});
 
 $("#post-form").addEventListener("submit", (e) => {
   e.preventDefault();
@@ -146,6 +183,7 @@ $("#post-form").addEventListener("submit", (e) => {
     visibility: $("#post-visibility").value,
     identity,
     alias: identity === "ficticio" ? alias : "",
+    id: `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`,
     own: true,
     date: new Date().toISOString(),
   });
