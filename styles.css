@@ -32,12 +32,13 @@ body {
   color: var(--space-text);
   min-height: 100vh;
   background-color: var(--space-deep);
-  /* Fondo por defecto: nebulosa (inicio) */
+  /* Fondo por defecto (inicio): Vía Láctea de la NASA con un velo oscuro para leer el texto.
+     Imagen de dominio público de la NASA: assets/via-lactea.jpg */
   background-image:
-    var(--stars),
-    radial-gradient(ellipse at 15% 10%, rgba(167, 139, 250, 0.28), transparent 55%),
-    radial-gradient(ellipse at 85% 90%, rgba(103, 232, 249, 0.2), transparent 55%),
-    linear-gradient(180deg, var(--space-deep) 0%, var(--space-navy) 100%);
+    linear-gradient(rgba(11, 16, 38, 0.6), rgba(11, 16, 38, 0.75)),
+    url("assets/via-lactea.jpg");
+  background-size: cover, cover;
+  background-position: center, center;
   background-attachment: fixed;
   transition: background-color 0.6s ease;
 }
@@ -53,12 +54,12 @@ body[data-view="chat"] {
 }
 
 body[data-view="muro"] {
-  /* Nebulosa rosa y magenta */
+  /* Nebulosa roja de la NASA: assets/nebulosa.jpg */
   background-image:
-    var(--stars),
-    radial-gradient(ellipse at 20% 30%, rgba(236, 72, 153, 0.35), transparent 50%),
-    radial-gradient(ellipse at 80% 70%, rgba(139, 92, 246, 0.35), transparent 55%),
-    linear-gradient(180deg, #1a0b2e 0%, #2b0f3f 100%);
+    linear-gradient(rgba(26, 11, 46, 0.55), rgba(26, 11, 46, 0.75)),
+    url("assets/nebulosa.jpg");
+  background-size: cover, cover;
+  background-position: center, center;
 }
 
 body[data-view="animo"] {
