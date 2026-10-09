@@ -80,8 +80,21 @@ function showView(name) {
 }
 showView("inicio");
 document.querySelectorAll(".nav-item").forEach((btn) =>
-  btn.addEventListener("click", () => showView(btn.dataset.view))
+  btn.addEventListener("click", () => {
+    showView(btn.dataset.view);
+    setMenuOpen(false); // al elegir una sección, el menú se cierra solo
+  })
 );
+
+// ---------- Menú desplegable (☰ Menú ⌄) ----------
+function setMenuOpen(open) {
+  $("#main-nav").classList.toggle("open", open);
+  $("#menu-toggle").classList.toggle("open", open);
+  $("#menu-toggle").setAttribute("aria-expanded", String(open));
+}
+$("#menu-toggle").addEventListener("click", () => {
+  setMenuOpen(!$("#main-nav").classList.contains("open"));
+});
 
 // ---------- Chat privado (no se persiste) ----------
 const chatHistory = [];

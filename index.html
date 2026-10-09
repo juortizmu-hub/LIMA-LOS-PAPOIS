@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=10" />
+    <link rel="stylesheet" href="styles.css?v=11" />
   </head>
   <body>
     <!-- Estrellas y planetas decorativos que cruzan la pantalla (no interactivos) -->
@@ -26,7 +26,10 @@
     <div class="layout">
       <aside class="sidebar">
         <div class="brand">Amigo UCV</div>
-        <nav>
+        <button type="button" id="menu-toggle" class="menu-toggle" aria-expanded="false" aria-controls="main-nav">
+          <span aria-hidden="true">☰</span> Menú <span class="menu-arrow" aria-hidden="true">⌄</span>
+        </button>
+        <nav id="main-nav">
           <button class="nav-item active" data-view="inicio">Inicio</button>
           <button class="nav-item" data-view="chat">Chat privado</button>
           <button class="nav-item" data-view="muro">Muro de posts</button>
