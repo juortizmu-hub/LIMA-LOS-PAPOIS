@@ -602,6 +602,34 @@ input[type="color"] {
   .guia-silabo-row { grid-template-columns: 1fr; }
 }
 
+/* ---------- Fondos y efectos del personaje (se desbloquean por nivel o cofre) ---------- */
+.fondo-cielo { background: linear-gradient(180deg, #9fd8ff, #e6f5ff 70%); }
+.fondo-atardecer { background: linear-gradient(180deg, #fb923c, #fde68a 55%, #fef3c7); }
+.fondo-espacio { background: radial-gradient(circle at 20% 20%, #312e81, transparent 45%), linear-gradient(180deg, #0b1026, #1e1b4b); }
+.fondo-espacio .pj-stage, .fondo-espacio svg { color: #fff; }
+
+.pc-personaje { position: relative; overflow: hidden; }
+.efecto-brillo svg { filter: drop-shadow(0 0 10px rgba(253, 224, 71, 0.9)); }
+.efecto-estrellas { position: relative; }
+.efecto-estrellas::after {
+  content: "✨ ⭐ ✨";
+  position: absolute;
+  top: 6%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 1.1rem;
+  pointer-events: none;
+  animation: pj-spin 2.4s ease-in-out infinite;
+}
+
+/* Recompensas y cofre */
+.pc-personaje-nombre { font-family: var(--font-fun); font-size: 1.1rem; font-weight: 600; color: var(--blue); }
+.pc-mensaje { margin: 0; padding: 0.5rem 0.8rem; border-left: 4px solid var(--yellow); background: var(--white); border-radius: 0 var(--radius-md) var(--radius-md) 0; font-style: italic; color: var(--ink); }
+.pc-recompensa { font-weight: 600; color: var(--blue-dark); }
+.pc-cofre { background: var(--yellow); color: var(--ink); box-shadow: 0 5px 0 var(--yellow-deep); animation: pj-pulse 1.6s ease-in-out infinite; }
+.pc-cofre:hover { background: #ffe56b; }
+
 /* ---------- Mi compañero UCV: tarjeta de progreso ---------- */
 .progreso-card { background: linear-gradient(160deg, var(--white), var(--sky-soft)); }
 .progreso-card h2 { margin: 0; }

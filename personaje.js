@@ -87,6 +87,7 @@
     { id: "mono", nombre: "Moño", icono: "🎀" },
     { id: "corona", nombre: "Corona", icono: "👑" },
     { id: "flor", nombre: "Flor", icono: "🌼" },
+    { id: "bufanda", nombre: "Bufanda", icono: "🧣" },
   ];
 
   const accesorio = (id, t, cara, c) => {
@@ -110,6 +111,10 @@
           <circle cx="0" cy="-8" r="7" fill="#f9a8d4"/><circle cx="8" cy="0" r="7" fill="#f9a8d4"/>
           <circle cx="0" cy="8" r="7" fill="#f9a8d4"/><circle cx="-8" cy="0" r="7" fill="#f9a8d4"/>
           <circle cx="0" cy="0" r="5" fill="#fdd835" stroke="${TINTA}" stroke-width="1.5"/></g>`;
+      case "bufanda":
+        return `<g transform="translate(${100} ${cara.y + 58 * cara.s})">
+          <rect x="-44" y="0" width="88" height="14" rx="7" fill="${c.detalle}" stroke="${TINTA}" stroke-width="2"/>
+          <rect x="22" y="8" width="14" height="30" rx="6" fill="${c.detalle}" stroke="${TINTA}" stroke-width="2"/></g>`;
       default:
         return "";
     }
@@ -192,16 +197,45 @@
   ];
 
   // ---------- Niveles: qué se desbloquea en cada nivel (ver progreso.js) ----------
-  const NIVEL_MODELO = { buddy: 1, chibi: 1, oso: 2, gato: 3, robot: 4, banana: 5, conejo: 6, pinguino: 7 };
+  // Requisito de nivel por elemento. 999 = solo se desbloquea con un cofre.
+  const NIVEL_MODELO = { buddy: 1, chibi: 1, oso: 2, gato: 3, robot: 4, banana: 5, conejo: 6, pinguino: 10 };
   const NIVEL_EMOCION = { feliz: 1, triste: 1, tierno: 1, enojado: 2, relajado: 2, enamorado: 3, pensativo: 3, sorprendido: 4, dormido: 4, travieso: 5, divertido: 5 };
-  const NIVEL_ACCESORIO = { ninguno: 1, gorro: 2, lentes: 3, mono: 4, corona: 5, flor: 6 };
+  const NIVEL_ACCESORIO = { ninguno: 1, gorro: 3, lentes: 4, mono: 6, flor: 8, bufanda: 999, corona: 20 };
+  const NIVEL_FONDO = { cielo: 1, atardecer: 5, espacio: 999 };
+  const NIVEL_EFECTO = { ninguno: 1, brillo: 999, estrellas: 999 };
+  // Tipo de cada mapa: se usa para buscar desbloqueos de cofre ("accesorio:bufanda")
+  const TIPO_DE = new Map([
+    [NIVEL_MODELO, "modelo"], [NIVEL_EMOCION, "emocion"], [NIVEL_ACCESORIO, "accesorio"],
+    [NIVEL_FONDO, "fondo"], [NIVEL_EFECTO, "efecto"],
+  ]);
+  const FONDOS = [
+    { id: "cielo", nombre: "Cielo" },
+    { id: "atardecer", nombre: "Atardecer" },
+    { id: "espacio", nombre: "Espacio" },
+  ];
+  const EFECTOS = [
+    { id: "ninguno", nombre: "Ninguno", icono: "🚫" },
+    { id: "brillo", nombre: "Brillo", icono: "✨" },
+    { id: "estrellas", nombre: "Estrellas", icono: "⭐" },
+  ];
   let nivelActual = 1;
-  const desbloqueado = (mapa, id) => (mapa[id] || 1) <= nivelActual;
-  const bloqueoHtml = (mapa, id) => (desbloqueado(mapa, id) ? "" : ` <span class="pj-lock">🔒 Nivel ${mapa[id]}</span>`);
+  const EXTRAS_KEY = "amigoucv:extras";
+  const extras = () => {
+    try {
+      return JSON.parse(localStorage.getItem(EXTRAS_KEY) || "[]");
+    } catch {
+      return [];
+    }
+  };
+  const desbloqueado = (mapa, id) => (mapa[id] || 1) <= nivelActual || extras().includes(`${TIPO_DE.get(mapa)}:${id}`);
+  const bloqueoHtml = (mapa, id) => {
+    if (desbloqueado(mapa, id)) return "";
+    return mapa[id] >= 999 ? ` <span class="pj-lock">🎁 Cofre</span>` : ` <span class="pj-lock">🔒 Nivel ${mapa[id]}</span>`;
+  };
 
   // ---------- Dibujo completo ----------
   const colorValido = (v, defecto) => (HEX.test(v) ? v : defecto);
-  const DEFECTO = { modelo: "buddy", emocion: "feliz", accesorio: "ninguno", cuerpo: "#fdd835", detalle: "#1e63c9" };
+  const DEFECTO = { nombre: "Lunito", modelo: "buddy", emocion: "feliz", accesorio: "ninguno", fondo: "cielo", efecto: "ninguno", cuerpo: "#fdd835", detalle: "#1e63c9" };
 
   function svgPersonaje(e) {
     const modelo = MODELOS.find((m) => m.id === e.modelo) || MODELOS[0];
@@ -219,7 +253,7 @@
 
   function vistaPrevia(e) {
     const emocion = EMOCIONES.find((x) => x.id === e.emocion) || EMOCIONES[0];
-    return `<div class="pj-stage ${emocion.anim}">${svgPersonaje(e)}</div>`;
+    return `<div class="pj-stage ${emocion.anim} efecto-${e.efecto || "ninguno"}">${svgPersonaje(e)}</div>`;
   }
 
   // ---------- Estado y guardado ----------
@@ -258,6 +292,16 @@
       return `<button type="button" class="pj-chip${x.id === estado.accesorio ? " selected" : ""}${bloqueado ? " locked" : ""}" data-accesorio="${x.id}" aria-pressed="${x.id === estado.accesorio}" ${bloqueado ? "disabled" : ""}>${x.icono} ${x.nombre}${bloqueoHtml(NIVEL_ACCESORIO, x.id)}</button>`;
     }).join("");
 
+    $("#pj-fondos").innerHTML = FONDOS.map((x) => {
+      const bloqueado = !desbloqueado(NIVEL_FONDO, x.id);
+      return `<button type="button" class="pj-chip${x.id === estado.fondo ? " selected" : ""}${bloqueado ? " locked" : ""}" data-fondo="${x.id}" aria-pressed="${x.id === estado.fondo}" ${bloqueado ? "disabled" : ""}>${x.nombre}${bloqueoHtml(NIVEL_FONDO, x.id)}</button>`;
+    }).join("");
+    $("#pj-efectos").innerHTML = EFECTOS.map((x) => {
+      const bloqueado = !desbloqueado(NIVEL_EFECTO, x.id);
+      return `<button type="button" class="pj-chip${x.id === estado.efecto ? " selected" : ""}${bloqueado ? " locked" : ""}" data-efecto="${x.id}" aria-pressed="${x.id === estado.efecto}" ${bloqueado ? "disabled" : ""}>${x.icono} ${x.nombre}${bloqueoHtml(NIVEL_EFECTO, x.id)}</button>`;
+    }).join("");
+    $("#pj-preview").className = `pj-preview fondo-${estado.fondo}`;
+    $("#pj-nombre-personaje").value = estado.nombre;
     $("#pj-cuerpo").value = estado.cuerpo;
     $("#pj-detalle").value = estado.detalle;
   }
@@ -292,6 +336,24 @@
     estado.accesorio = btn.dataset.accesorio;
     mostrarEstado("");
     renderTodo();
+  });
+
+  $("#pj-fondos").addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-fondo]");
+    if (!btn || !desbloqueado(NIVEL_FONDO, btn.dataset.fondo)) return;
+    estado.fondo = btn.dataset.fondo;
+    renderTodo();
+  });
+
+  $("#pj-efectos").addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-efecto]");
+    if (!btn || !desbloqueado(NIVEL_EFECTO, btn.dataset.efecto)) return;
+    estado.efecto = btn.dataset.efecto;
+    renderTodo();
+  });
+
+  $("#pj-nombre-personaje").addEventListener("input", (e) => {
+    estado.nombre = e.target.value.trim().slice(0, 20) || "Lunito";
   });
 
   $("#pj-cuerpo").addEventListener("input", (e) => {
@@ -335,7 +397,13 @@
   // Puente con progreso.js: tarjeta de inicio y niveles
   window.AmigoPersonaje = {
     svgGuardado: () => svgPersonaje({ ...DEFECTO, ...cargarGuardado() }),
+    claseGuardada: () => {
+      const g = { ...DEFECTO, ...cargarGuardado() };
+      return `fondo-${g.fondo} efecto-${g.efecto}`;
+    },
+    nombre: () => ({ ...DEFECTO, ...cargarGuardado() }).nombre,
   };
+  window.addEventListener("amigo:extras", () => renderTodo());
   window.addEventListener("amigo:nivel", (e) => {
     nivelActual = e.detail.nivel;
     renderTodo();

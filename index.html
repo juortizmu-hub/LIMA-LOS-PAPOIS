@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=15" />
+    <link rel="stylesheet" href="styles.css?v=16" />
   </head>
   <body>
     <!-- Estrellas y planetas decorativos que cruzan la pantalla (no interactivos) -->
@@ -56,6 +56,7 @@
             <div class="pc-cuerpo">
               <div id="pc-personaje" class="pc-personaje" role="img" aria-label="Tu personaje"></div>
               <div class="pc-info">
+                <p id="pc-personaje-nombre" class="pc-personaje-nombre"></p>
                 <p id="pc-nivel" class="pc-nivel"></p>
                 <p id="pc-xp" class="pc-xp"></p>
                 <div id="pc-barra" class="pc-barra" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Progreso al siguiente nivel">
@@ -63,7 +64,11 @@
                 </div>
                 <p id="pc-porcentaje" class="hint pc-porcentaje">0 %</p>
                 <p id="pc-racha" class="pc-racha"></p>
-                <p id="pc-mensaje" class="hint"></p>
+                <blockquote id="pc-mensaje" class="pc-mensaje"></blockquote>
+                <p id="pc-recompensa" class="pc-recompensa"></p>
+                <button type="button" id="pc-cofre" class="pc-cofre" hidden>🎁 Abrir cofre</button>
+                <p id="pc-cofre-estado" class="hint" role="status"></p>
+                <p id="pc-aviso" class="hint"></p>
                 <p class="hint">💬 Cada emoción merece ser escuchada.</p>
                 <button type="button" id="pc-compartir">💙 Compartir cómo me siento</button>
               </div>
@@ -206,6 +211,15 @@
                 <label>Cuerpo <input id="pj-cuerpo" type="color" value="#fdd835" /></label>
                 <label>Detalles <input id="pj-detalle" type="color" value="#1e63c9" /></label>
               </div>
+
+              <h2>Nombre</h2>
+              <input id="pj-nombre-personaje" type="text" maxlength="20" placeholder="Lunito" aria-label="Nombre de tu personaje" />
+
+              <h2>Fondo</h2>
+              <div id="pj-fondos" class="pj-chips"></div>
+
+              <h2>Efecto</h2>
+              <div id="pj-efectos" class="pj-chips"></div>
 
               <div class="row pj-acciones">
                 <button type="button" id="pj-guardar">Guardar personaje</button>

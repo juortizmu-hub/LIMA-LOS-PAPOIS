@@ -160,6 +160,7 @@ $("#mood-form").addEventListener("submit", (e) => {
   store.set("mood", entries);
   e.target.reset();
   renderMood();
+  window.dispatchEvent(new Event("amigo:animo")); // progreso.js: el registro de ánimo también suma racha y XP
 });
 
 // ---------- Visión board ----------
