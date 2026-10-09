@@ -210,6 +210,97 @@ button.danger:hover { background: #be185d; }
   box-shadow: none;
 }
 
+:root {
+  --minion-yellow: #f5d94d;
+  --minion-yellow-dark: #e9c529;
+  --minion-orange: #f0ae3d;
+  --text-dark: #1d2a36;
+  --shadow-soft: rgba(245, 217, 77, 0.28);
+}
+
+.refugio-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  background: linear-gradient(135deg, var(--minion-yellow) 0%, var(--minion-yellow-dark) 45%, var(--minion-orange) 100%);
+  color: var(--text-dark);
+  padding: 18px 28px;
+  border-radius: 18px;
+  border: 2px solid rgba(29, 42, 54, 0.9);
+  box-shadow: 0 12px 26px var(--shadow-soft);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+  font-family: "Segoe UI", Arial, sans-serif;
+  max-width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.refugio-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, rgba(255,255,255,0.18), rgba(255,255,255,0));
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+
+.refugio-btn:hover::before { transform: translateX(100%); }
+
+.refugio-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 32px rgba(233, 197, 41, 0.35);
+  filter: saturate(1.06);
+}
+
+.refugio-btn:focus-visible {
+  outline: 3px solid var(--text-dark);
+  outline-offset: 4px;
+}
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  font-size: 22px;
+  flex-shrink: 0;
+  box-shadow: inset 0 0 0 1px rgba(29, 42, 54, 0.12);
+}
+
+.btn-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.2;
+  position: relative;
+  z-index: 1;
+}
+
+.btn-text strong {
+  font-size: 1.08rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.btn-text small {
+  font-size: 0.72rem;
+  font-weight: 700;
+  opacity: 0.9;
+  letter-spacing: 0.04em;
+  margin-top: 2px;
+}
+
+@media (max-width: 640px) {
+  .refugio-btn { padding: 15px 20px; gap: 10px; border-radius: 16px; }
+  .btn-icon { width: 34px; height: 34px; font-size: 18px; }
+  .btn-text strong { font-size: 0.96rem; }
+  .btn-text small { font-size: 0.64rem; }
+}
+
 @media (max-width: 720px) {
   .layout { flex-direction: column; }
   .sidebar { width: 100%; height: auto; position: static; }
