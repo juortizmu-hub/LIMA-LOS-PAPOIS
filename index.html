@@ -4,9 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Amigo UCV · Salud mental</title>
-    <link rel="stylesheet" href="styles.css?v=6" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css?v=8" />
   </head>
   <body>
+    <!-- Estrellas y planetas decorativos que cruzan la pantalla (no interactivos) -->
+    <div class="space-drift" aria-hidden="true">
+      <span class="drift drift-star s1">⭐</span>
+      <span class="drift drift-star s2">✨</span>
+      <span class="drift drift-star s3">⭐</span>
+      <span class="drift drift-star s4">✨</span>
+      <span class="drift drift-star s5">⭐</span>
+      <span class="drift drift-planet p1"></span>
+      <span class="drift drift-planet p2"></span>
+      <span class="drift drift-planet p3"></span>
+      <span class="drift drift-banana b1">🍌</span>
+      <span class="drift drift-banana b2">🍌</span>
+    </div>
     <div class="layout">
       <aside class="sidebar">
         <div class="brand">Amigo UCV</div>
@@ -26,6 +42,9 @@
       <main class="content">
         <!-- Página de bienvenida -->
         <section id="view-inicio" class="view active">
+          <div class="hero-decor" aria-hidden="true">
+            <span>🍌</span><span>⭐</span><span>☁️</span><span>🍌</span>
+          </div>
           <h1>Bienvenido a Amigo UCV</h1>
           <p>Un espacio pensado para ti, estudiante de la Universidad César Vallejo. Aquí puedes hablar en privado, registrar cómo te sientes y compartir con la comunidad, de forma pública o anónima.</p>
 
