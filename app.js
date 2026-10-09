@@ -25,6 +25,33 @@ const store = {
 const escapeHtml = (s) =>
   String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
+// ---------- Filtro de contenido (publicaciones, metas, notas y apodos) ----------
+// Se aplica a lo que se publica o se guarda para otras personas. El chat privado NO se filtra,
+// para que nadie se quede sin poder pedir ayuda al escribir algo fuerte.
+// Cada entrada es el inicio de una palabra: "asesin" cubre asesino, asesinar, asesinato, etc.
+const PALABRAS_BLOQUEADAS = [
+  // Sexual explícito
+  "porno", "desnud", "nudes", "masturb", "follar", "orgia", "pene", "vagina", "tetas", "sexo oral",
+  // Asesinatos y violencia contra otros
+  "asesin", "homicid", "masacr", "descuartiz", "degoll", "decapit", "genocid", "tiroteo",
+  // Ofensas y insultos a personas
+  "puta", "puto", "perra", "zorra", "maricon", "pendej", "imbecil", "idiota", "estupid", "retrasad",
+];
+
+const AVISO_FILTRO = "Tu texto contiene palabras no permitidas. Cámbialo e inténtalo de nuevo.";
+
+// Quita tildes y pasa a minúsculas para que "Múltiple" y "multiple" se comparen igual
+const normalizarTexto = (s) =>
+  String(s).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+
+function contieneContenidoBloqueado(texto) {
+  const limpio = normalizarTexto(texto);
+  return PALABRAS_BLOQUEADAS.some((termino) => {
+    const patron = new RegExp(`\\b${normalizarTexto(termino).replace(/ /g, "\\s+")}`);
+    return patron.test(limpio);
+  });
+}
+
 // ---------- Navegación (barra lateral siempre visible) ----------
 function showView(name) {
   document.querySelectorAll(".view").forEach((v) => v.classList.toggle("active", v.id === `view-${name}`));
@@ -103,6 +130,10 @@ $("#post-form").addEventListener("submit", (e) => {
   e.preventDefault();
   const identity = $("#post-identity").value;
   const alias = getActiveProfile()?.apodo || "";
+  if (contieneContenidoBloqueado($("#post-text").value) || contieneContenidoBloqueado(alias)) {
+    alert(AVISO_FILTRO);
+    return;
+  }
   if (identity === "ficticio" && !alias) {
     alert("Crea un perfil y márcalo como activo en Configuración antes de publicar con tu apodo.");
     showView("config");
@@ -145,6 +176,10 @@ $("#mood-form").addEventListener("submit", (e) => {
   e.preventDefault();
   const level = Number(document.querySelector('input[name="mood"]:checked')?.value);
   if (!level) return;
+  if (contieneContenidoBloqueado($("#mood-note").value)) {
+    alert(AVISO_FILTRO);
+    return;
+  }
   const entries = store.get("mood", []);
   entries.push({ level, note: $("#mood-note").value.trim(), date: new Date().toISOString() });
   store.set("mood", entries);
@@ -165,6 +200,10 @@ function renderVision() {
 
 $("#vision-form").addEventListener("submit", (e) => {
   e.preventDefault();
+  if (contieneContenidoBloqueado($("#vision-text").value)) {
+    alert(AVISO_FILTRO);
+    return;
+  }
   const items = store.get("vision", []);
   items.push($("#vision-text").value.trim());
   store.set("vision", items);
@@ -215,6 +254,10 @@ $("#profile-form").addEventListener("submit", (e) => {
   e.preventDefault();
   const apodo = $("#profile-alias").value.trim();
   if (!apodo) return;
+  if (contieneContenidoBloqueado(apodo)) {
+    alert(AVISO_FILTRO);
+    return;
+  }
   const profiles = getProfiles();
   const profile = { id: Date.now().toString(36), genero: $("#profile-gender").value, apodo };
   profiles.push(profile);
