@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=12" />
+    <link rel="stylesheet" href="styles.css?v=13" />
   </head>
   <body>
     <!-- Estrellas y planetas decorativos que cruzan la pantalla (no interactivos) -->
@@ -76,6 +76,21 @@
         <!-- Muro de posts -->
         <section id="view-muro" class="view">
           <h1>Muro de posts</h1>
+          <p id="social-status" class="hint" role="status"></p>
+
+          <div class="card" id="auth-card">
+            <form id="auth-form" class="row">
+              <input id="auth-email" type="text" inputmode="email" autocomplete="email" placeholder="Correo" />
+              <input id="auth-password" type="password" autocomplete="current-password" placeholder="Contraseña (mín. 6)" />
+              <button type="button" id="auth-login">Entrar</button>
+              <button type="button" id="auth-register" class="danger">Crear cuenta</button>
+            </form>
+            <div id="auth-sesion" class="row" hidden>
+              <span id="auth-usuario"></span>
+              <button type="button" id="auth-logout" class="danger">Cerrar sesión</button>
+            </div>
+            <p id="auth-status" class="hint" role="status"></p>
+          </div>
 
           <form id="post-form" class="card">
             <textarea id="post-text" rows="3" maxlength="500" placeholder="¿Qué quieres compartir?" required></textarea>
@@ -103,7 +118,14 @@
                 </select>
               </label>
             </div>
-            <button type="submit">Publicar</button>
+            <label class="post-image-label">Imagen (opcional, máx. 2 MB)
+              <input id="post-image" type="file" accept="image/*" />
+            </label>
+            <p id="post-login-aviso" class="hint">Inicia sesión para publicar.</p>
+            <div class="row">
+              <button type="submit">Publicar</button>
+              <span id="post-status" class="hint" role="status"></span>
+            </div>
           </form>
 
           <h2>Publicaciones</h2>
@@ -263,5 +285,8 @@
     </div>
     <script src="app.js"></script>
     <script src="personaje.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="supabase-config.js"></script>
+    <script src="social.js"></script>
   </body>
 </html>

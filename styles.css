@@ -375,17 +375,34 @@ button.danger:active { box-shadow: 0 2px 0 var(--yellow-deep); }
   font-size: 1rem;
 }
 
-/* Reportar publicaciones */
-.report-btn {
-  margin-top: 0.6rem;
-  padding: 0.3rem 0.85rem;
+[hidden] { display: none !important; }
+
+/* Muro social: acciones de publicaciones y comentarios */
+.post-img { display: block; width: 100%; max-height: 360px; object-fit: contain; border-radius: var(--radius-md); margin: 0.6rem 0; border: 2px solid var(--sky); background: var(--sky-soft); }
+.post-actions { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.6rem; }
+.social-btn {
   font-size: 0.85rem;
-  background: var(--yellow);
-  color: var(--ink);
-  box-shadow: 0 3px 0 var(--yellow-deep);
+  padding: 0.3rem 0.8rem;
+  background: var(--white);
+  color: var(--blue-dark);
+  border: 2px solid var(--sky);
+  box-shadow: 0 2px 0 var(--sky);
+  align-self: auto;
 }
-.report-btn:hover { background: #ffe56b; }
-.report-btn:active { box-shadow: none; }
+.social-btn:hover { background: var(--yellow-soft); }
+.social-btn.liked { background: var(--yellow); border-color: var(--yellow-deep); color: var(--ink); }
+.social-btn.report { color: var(--ink); }
+.social-btn.danger { background: var(--white); color: #b42318; border-color: #fca5a5; box-shadow: 0 2px 0 #fca5a5; }
+.comments { margin-top: 0.8rem; display: flex; flex-direction: column; gap: 0.6rem; }
+.comment-list { margin: 0; }
+.comment { background: var(--sky-soft); border: 2px solid var(--sky); border-radius: var(--radius-md); padding: 0.6rem 0.8rem; margin-bottom: 0.5rem; list-style: none; }
+.comment.reply { margin-left: 1.5rem; background: var(--white); }
+.comment p { margin: 0; white-space: pre-wrap; word-wrap: break-word; }
+.comment-form { display: flex; gap: 0.5rem; margin-top: 0.4rem; }
+.comment-form .comment-input { flex: 1; }
+.comment-form button { font-size: 0.9rem; padding: 0.45rem 0.9rem; }
+.post-image-label { display: flex; flex-direction: column; gap: 0.35rem; font-weight: 600; color: var(--blue-dark); }
+input[type="file"] { font: inherit; }
 
 /* Mi personaje: vista previa del muñeco */
 .avatar-preview {
