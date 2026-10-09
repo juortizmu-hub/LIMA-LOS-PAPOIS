@@ -99,9 +99,9 @@ function renderFeed() {
 $("#post-form").addEventListener("submit", (e) => {
   e.preventDefault();
   const identity = $("#post-identity").value;
-  const alias = store.get("alias", "");
+  const alias = getActiveProfile()?.apodo || "";
   if (identity === "ficticio" && !alias) {
-    alert("Define un nombre ficticio en Configuración antes de publicar con ese nombre.");
+    alert("Crea un perfil y márcalo como activo en Configuración antes de publicar con tu apodo.");
     showView("config");
     return;
   }
@@ -178,13 +178,61 @@ $("#vision-board").addEventListener("click", (e) => {
   renderVision();
 });
 
-// ---------- Configuración ----------
-$("#config-alias").value = store.get("alias", "");
+// ---------- Perfiles y apodos ----------
+function getProfiles() {
+  return store.get("perfiles", []);
+}
 
-$("#config-form").addEventListener("submit", (e) => {
+function getActiveProfile() {
+  const id = store.get("perfilActivo", null);
+  return getProfiles().find((p) => p.id === id) || null;
+}
+
+function renderProfiles() {
+  const profiles = getProfiles();
+  const activeId = store.get("perfilActivo", null);
+  $("#profile-list").innerHTML = profiles.length
+    ? profiles
+        .map((p) => {
+          const icon = p.genero === "mujer" ? "👩" : "👨";
+          const isActive = p.id === activeId;
+          return `<li>
+            <span>${icon} <strong>${escapeHtml(p.apodo)}</strong> · ${p.genero === "mujer" ? "Mujer" : "Hombre"}${
+              isActive ? " · <em>(activo)</em>" : ""
+            }</span>
+            <button type="button" data-use="${p.id}" class="use-btn">${isActive ? "Activo" : "Usar"}</button>
+            <button type="button" data-delete="${p.id}" class="danger" aria-label="Eliminar perfil">×</button>
+          </li>`;
+        })
+        .join("")
+    : `<li class="hint">Aún no tienes perfiles.</li>`;
+}
+
+$("#profile-form").addEventListener("submit", (e) => {
   e.preventDefault();
-  store.set("alias", $("#config-alias").value.trim());
-  alert("Guardado.");
+  const apodo = $("#profile-alias").value.trim();
+  if (!apodo) return;
+  const profiles = getProfiles();
+  const profile = { id: Date.now().toString(36), genero: $("#profile-gender").value, apodo };
+  profiles.push(profile);
+  store.set("perfiles", profiles);
+  if (!getActiveProfile()) store.set("perfilActivo", profile.id);
+  e.target.reset();
+  renderProfiles();
+});
+
+$("#profile-list").addEventListener("click", (e) => {
+  const useId = e.target.dataset.use;
+  const deleteId = e.target.dataset.delete;
+  if (useId) {
+    store.set("perfilActivo", useId);
+  } else if (deleteId) {
+    store.set("perfiles", getProfiles().filter((p) => p.id !== deleteId));
+    if (store.get("perfilActivo", null) === deleteId) store.set("perfilActivo", null);
+  } else {
+    return;
+  }
+  renderProfiles();
 });
 
 $("#clear-data").addEventListener("click", () => {
@@ -197,3 +245,4 @@ $("#clear-data").addEventListener("click", () => {
 renderFeed();
 renderMood();
 renderVision();
+renderProfiles();

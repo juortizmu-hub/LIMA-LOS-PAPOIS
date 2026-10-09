@@ -78,7 +78,7 @@
               <label>Identidad
                 <select id="post-identity">
                   <option value="anonimo">Anónimo</option>
-                  <option value="ficticio">Nombre ficticio</option>
+                  <option value="ficticio">Apodo de mi perfil</option>
                 </select>
               </label>
             </div>
@@ -147,13 +147,21 @@
         <!-- Configuración -->
         <section id="view-config" class="view">
           <h1>Configuración / Otros recursos</h1>
-          <form id="config-form" class="card">
-            <label>Nombre ficticio (para publicaciones)
-              <input id="config-alias" type="text" maxlength="30" placeholder="Ej. Estudiante Estrella" />
+          <h2>Perfiles y apodos</h2>
+          <p class="hint">Crea perfiles con un apodo. El perfil activo se usa cuando publicas con nombre ficticio.</p>
+          <form id="profile-form" class="card">
+            <label>Género
+              <select id="profile-gender">
+                <option value="hombre">Hombre</option>
+                <option value="mujer">Mujer</option>
+              </select>
             </label>
-            <button type="submit">Guardar</button>
+            <label>Apodo
+              <input id="profile-alias" type="text" maxlength="30" placeholder="Ej. Estudiante Estrella" required />
+            </label>
+            <button type="submit">Crear perfil</button>
           </form>
-          <button id="clear-data" class="danger">Borrar mis datos guardados</button>
+          <ul id="profile-list" class="list"></ul>          <button id="clear-data" class="danger">Borrar mis datos guardados</button>
           <h2>Otros recursos</h2>
           <ul class="social-links">
             <li><a href="https://www.ucv.edu.pe/" target="_blank" rel="noopener">Sitio web de la UCV</a></li>
