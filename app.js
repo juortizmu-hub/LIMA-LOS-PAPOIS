@@ -29,7 +29,10 @@ const escapeHtml = (s) =>
 function showView(name) {
   document.querySelectorAll(".view").forEach((v) => v.classList.toggle("active", v.id === `view-${name}`));
   document.querySelectorAll(".nav-item").forEach((b) => b.classList.toggle("active", b.dataset.view === name));
+  // El fondo espacial cambia según la sección (ver body[data-view] en styles.css)
+  document.body.dataset.view = name;
 }
+showView("inicio");
 document.querySelectorAll(".nav-item").forEach((btn) =>
   btn.addEventListener("click", () => showView(btn.dataset.view))
 );

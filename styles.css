@@ -15,21 +15,96 @@
 
 * { box-sizing: border-box; }
 
+/* Capa de estrellas compartida por todos los fondos */
+:root {
+  --stars:
+    radial-gradient(1px 1px at 12% 18%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 40% 72%, #fff 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 72% 30%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 88% 82%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 26% 46%, #fff 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 60% 8%, #fff 50%, transparent 51%);
+}
+
 body {
   margin: 0;
   font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
   color: var(--space-text);
   min-height: 100vh;
   background-color: var(--space-deep);
+  /* Fondo por defecto: nebulosa (inicio) */
   background-image:
-    radial-gradient(1px 1px at 12% 18%, #fff 50%, transparent 51%),
-    radial-gradient(1px 1px at 40% 72%, #fff 50%, transparent 51%),
-    radial-gradient(1.5px 1.5px at 72% 30%, #fff 50%, transparent 51%),
-    radial-gradient(1px 1px at 88% 82%, #fff 50%, transparent 51%),
+    var(--stars),
     radial-gradient(ellipse at 15% 10%, rgba(167, 139, 250, 0.28), transparent 55%),
     radial-gradient(ellipse at 85% 90%, rgba(103, 232, 249, 0.2), transparent 55%),
     linear-gradient(180deg, var(--space-deep) 0%, var(--space-navy) 100%);
   background-attachment: fixed;
+  transition: background-color 0.6s ease;
+}
+
+/* Un fondo distinto por sección, según el data-view que pone app.js en <body> */
+body[data-view="chat"] {
+  /* Galaxia azul con núcleo brillante */
+  background-image:
+    var(--stars),
+    radial-gradient(ellipse 60% 25% at 50% 45%, rgba(96, 165, 250, 0.35), transparent 70%),
+    radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.25), transparent 12%),
+    linear-gradient(180deg, #050a1f 0%, #0c1a4a 100%);
+}
+
+body[data-view="muro"] {
+  /* Nebulosa rosa y magenta */
+  background-image:
+    var(--stars),
+    radial-gradient(ellipse at 20% 30%, rgba(236, 72, 153, 0.35), transparent 50%),
+    radial-gradient(ellipse at 80% 70%, rgba(139, 92, 246, 0.35), transparent 55%),
+    linear-gradient(180deg, #1a0b2e 0%, #2b0f3f 100%);
+}
+
+body[data-view="animo"] {
+  /* Aurora boreal verde y turquesa */
+  background-image:
+    var(--stars),
+    radial-gradient(ellipse 80% 30% at 30% 0%, rgba(52, 211, 153, 0.35), transparent 70%),
+    radial-gradient(ellipse 70% 25% at 75% 10%, rgba(45, 212, 191, 0.25), transparent 70%),
+    linear-gradient(180deg, #03141a 0%, #062b2b 100%);
+}
+
+body[data-view="vision"] {
+  /* Planetas: uno naranja con anillo y otro azul */
+  background-image:
+    var(--stars),
+    radial-gradient(circle at 85% 20%, #f97316 0 60px, transparent 61px),
+    radial-gradient(circle at 15% 85%, #2563eb 0 90px, transparent 91px),
+    linear-gradient(180deg, #0a0614 0%, #1b1033 100%);
+}
+
+body[data-view="apoyo"] {
+  /* Luna grande con halo suave */
+  background-image:
+    var(--stars),
+    radial-gradient(circle at 80% 25%, #e2e8f0 0 70px, transparent 72px),
+    radial-gradient(circle at 80% 25%, rgba(226, 232, 240, 0.25), transparent 120px),
+    linear-gradient(180deg, #0b1220 0%, #16243d 100%);
+}
+
+body[data-view="academico"] {
+  /* Cielo índigo con cuadrícula de navegación */
+  background-image:
+    var(--stars),
+    linear-gradient(rgba(129, 140, 248, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(129, 140, 248, 0.08) 1px, transparent 1px),
+    linear-gradient(180deg, #100c2e 0%, #1e1a52 100%);
+  background-size: auto, 40px 40px, 40px 40px, auto;
+}
+
+body[data-view="config"] {
+  /* Espacio profundo, casi negro, con muchas estrellas */
+  background-image:
+    var(--stars),
+    radial-gradient(1px 1px at 33% 61%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 92% 44%, #fff 50%, transparent 51%),
+    linear-gradient(180deg, #000000 0%, #05060f 100%);
 }
 
 /* Barra superior: panel de cristal con borde de luz */
