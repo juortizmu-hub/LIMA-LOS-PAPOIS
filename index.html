@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=13" />
+    <link rel="stylesheet" href="styles.css?v=14" />
   </head>
   <body>
     <!-- Estrellas y planetas decorativos que cruzan la pantalla (no interactivos) -->
@@ -50,6 +50,25 @@
             <span>🍌</span><span>⭐</span><span>☁️</span><span>🍌</span>
           </div>
           <h1>Bienvenido a Amigo UCV</h1>
+
+          <section class="progreso-card card" aria-labelledby="pc-titulo">
+            <h2 id="pc-titulo">💙 Mi compañero UCV</h2>
+            <div class="pc-cuerpo">
+              <div id="pc-personaje" class="pc-personaje" role="img" aria-label="Tu personaje"></div>
+              <div class="pc-info">
+                <p id="pc-nivel" class="pc-nivel"></p>
+                <p id="pc-xp" class="pc-xp"></p>
+                <div id="pc-barra" class="pc-barra" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Progreso al siguiente nivel">
+                  <span id="pc-relleno"></span>
+                </div>
+                <p id="pc-porcentaje" class="hint pc-porcentaje">0 %</p>
+                <p id="pc-racha" class="pc-racha"></p>
+                <p id="pc-mensaje" class="hint"></p>
+                <p class="hint">💬 Cada emoción merece ser escuchada.</p>
+                <button type="button" id="pc-compartir">💙 Compartir cómo me siento</button>
+              </div>
+            </div>
+          </section>
           <p>Un espacio pensado para ti, estudiante de la Universidad César Vallejo. Aquí puedes hablar en privado, registrar cómo te sientes y compartir con la comunidad, de forma pública o anónima.</p>
 
           <h2>Síguenos en redes de la UCV</h2>
@@ -288,6 +307,7 @@
     </div>
     <script src="app.js"></script>
     <script src="personaje.js"></script>
+    <script src="progreso.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script src="supabase-config.js"></script>
     <script src="social.js"></script>

@@ -547,6 +547,53 @@ input[type="color"] {
   to { transform: translate3d(112vw, 0, 0) rotate(360deg); }
 }
 
+/* ---------- Mi compañero UCV: tarjeta de progreso ---------- */
+.progreso-card { background: linear-gradient(160deg, var(--white), var(--sky-soft)); }
+.progreso-card h2 { margin: 0; }
+.pc-cuerpo { display: grid; grid-template-columns: minmax(150px, 200px) 1fr; gap: 1.2rem; align-items: center; }
+.pc-personaje {
+  aspect-ratio: 200 / 230;
+  background: var(--white);
+  border: 3px solid var(--yellow);
+  border-radius: var(--radius-lg);
+  padding: 0.5rem;
+  box-shadow: var(--shadow-soft);
+}
+.pc-personaje svg { width: 100%; height: 100%; display: block; }
+.pc-info { display: flex; flex-direction: column; gap: 0.4rem; align-items: flex-start; }
+.pc-info p { margin: 0; }
+.pc-nivel { font-family: var(--font-fun); font-size: 1.3rem; font-weight: 700; color: var(--blue-dark); }
+.pc-xp { font-weight: 600; }
+.pc-barra {
+  width: 100%;
+  height: 18px;
+  background: var(--white);
+  border: 2px solid var(--blue);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.pc-barra span {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--blue), var(--yellow));
+  border-radius: 999px;
+  transition: width 0.6s ease;
+}
+.pc-racha { font-weight: 700; color: var(--blue-dark); }
+.pc-info button { margin-top: 0.3rem; }
+
+@media (max-width: 560px) {
+  .pc-cuerpo { grid-template-columns: 1fr; justify-items: center; }
+  .pc-info { align-items: center; text-align: center; }
+  .pc-personaje { width: min(180px, 60vw); }
+}
+
+/* Elementos bloqueados por nivel */
+.pj-lock { display: block; font-size: 0.75rem; color: var(--muted); font-weight: 600; }
+.pj-card.locked, .pj-chip.locked { opacity: 0.55; cursor: not-allowed; transform: none; box-shadow: none; }
+.pj-chip.locked:hover, .pj-card.locked:hover { transform: none; background: var(--white); }
+
 /* ---------- Mi personaje: galería, emociones, accesorios y colores ---------- */
 .pj-layout { display: grid; grid-template-columns: minmax(220px, 1fr) minmax(0, 1.4fr); gap: 1.25rem; align-items: start; }
 .pj-preview-card { position: sticky; top: 6rem; align-items: center; text-align: center; }

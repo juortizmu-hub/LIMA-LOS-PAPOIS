@@ -29,6 +29,8 @@
   }
 
   sb = window.supabase.createClient(cfg.url, cfg.anonKey);
+  // Puente con progreso.js (tarjeta de nivel de inicio)
+  window.AmigoSocial = { sb: () => sb, usuario: () => usuario };
 
   // ---------- Cuenta ----------
   function pintarCuenta() {
@@ -77,6 +79,7 @@
     usuario = sesion?.user || null;
     pintarCuenta();
     cargarMuro();
+    window.dispatchEvent(new Event("amigo:sesion"));
   });
 
   // ---------- Carga del muro ----------
@@ -225,6 +228,7 @@
     $("#post-status").textContent = "";
     e.target.reset();
     cargarMuro();
+    window.dispatchEvent(new Event("amigo:publicacion"));
   });
 
   // ---------- Interacciones (un solo delegado para todo el muro) ----------
@@ -268,6 +272,7 @@
       if (error) return alert(mensajeError(error));
       if (fila?.image_path) await sb.storage.from(BUCKET).remove([fila.image_path]);
       abiertos.delete(d.deletePost);
+      window.dispatchEvent(new Event("amigo:publicacion"));
       return cargarMuro();
     }
     if (d.deleteComment) {
