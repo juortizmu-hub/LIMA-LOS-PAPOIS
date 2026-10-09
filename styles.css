@@ -547,6 +547,61 @@ input[type="color"] {
   to { transform: translate3d(112vw, 0, 0) rotate(360deg); }
 }
 
+/* ---------- Guía académica: barra lateral estilo Gemini + paneles ---------- */
+.guia-layout { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 1.25rem; align-items: start; }
+.guia-sidebar {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 24px;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  position: sticky;
+  top: 6rem;
+  box-shadow: var(--shadow-soft);
+}
+.guia-link {
+  text-align: left;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  box-shadow: none;
+  align-self: stretch;
+}
+.guia-link:hover { background: var(--sky-soft); transform: none; }
+.guia-link.active { background: var(--sky); color: var(--blue-dark); transform: none; box-shadow: none; }
+.guia-link:active { transform: none; }
+
+.guia-panel { display: none; }
+.guia-panel.active { display: block; animation: pop-in 0.3s ease; }
+.guia-panel h2 { margin-top: 0; }
+.guia-file { display: flex; flex-direction: column; gap: 0.4rem; }
+.guia-silabo-row { display: grid; grid-template-columns: minmax(120px, 1fr) minmax(0, 1.2fr) auto; gap: 0.6rem; align-items: center; padding: 0.5rem 0; border-bottom: 1px dashed var(--sky); }
+.guia-silabo-nombre { font-weight: 700; color: var(--blue-dark); }
+.guia-curso h3 { margin: 0 0 0.6rem; color: var(--blue); }
+.guia-plan { padding-left: 1.2rem; margin: 0; display: flex; flex-direction: column; gap: 0.7rem; }
+.guia-semana ul { margin: 0.3rem 0 0; padding-left: 1.1rem; }
+.guia-tareas { list-style: none; padding: 0; }
+.guia-tarea { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.8rem; }
+.guia-tarea label { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; }
+.guia-tarea input[type="checkbox"] { width: 1.1rem; height: 1.1rem; accent-color: var(--blue); }
+.guia-tarea.hecha .guia-tarea-nombre { text-decoration: line-through; color: var(--muted); }
+.guia-tarea p { width: 100%; margin: 0; }
+.guia-tag { font-size: 0.8rem; font-weight: 700; padding: 0.2rem 0.7rem; border-radius: 999px; border: 2px solid var(--ink); }
+.guia-tag.grupal { background: var(--yellow); }
+.guia-tag.individual { background: var(--sky); }
+
+@media (max-width: 720px) {
+  .guia-layout { grid-template-columns: 1fr; }
+  .guia-sidebar { position: static; flex-direction: row; flex-wrap: wrap; border-radius: 16px; }
+  .guia-link { flex: 1 1 auto; text-align: center; }
+  .guia-silabo-row { grid-template-columns: 1fr; }
+}
+
 /* ---------- Mi compañero UCV: tarjeta de progreso ---------- */
 .progreso-card { background: linear-gradient(160deg, var(--white), var(--sky-soft)); }
 .progreso-card h2 { margin: 0; }

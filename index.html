@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=14" />
+    <link rel="stylesheet" href="styles.css?v=15" />
   </head>
   <body>
     <!-- Estrellas y planetas decorativos que cruzan la pantalla (no interactivos) -->
@@ -239,7 +239,46 @@
         <!-- Guía académica -->
         <section id="view-academico" class="view">
           <h1>Guía académica</h1>
-          <p>Consejos para organizar el estudio y manejar la presión académica: divide las tareas en pasos pequeños, toma pausas regulares y pide ayuda a tus profesores o compañeros cuando la necesites.</p>
+          <p class="hint">Organizador con IA: sube tu ficha de matrícula y los sílabos de tus cursos. Te diremos qué estudiar en cada etapa del ciclo y qué entregas tienes.</p>
+
+          <div class="guia-layout">
+            <aside class="guia-sidebar" aria-label="Secciones de la guía">
+              <button type="button" class="guia-link active" data-panel="carga">📎 Zona de carga</button>
+              <button type="button" class="guia-link" data-panel="cronograma">🗓️ Cronograma de estudio</button>
+              <button type="button" class="guia-link" data-panel="tareas">✅ Gestor de tareas</button>
+            </aside>
+
+            <div class="guia-main">
+              <div id="panel-carga" class="guia-panel active">
+                <div class="card">
+                  <h2>Ficha de matrícula</h2>
+                  <label class="guia-file">Sube tu ficha (PDF o texto)
+                    <input id="guia-matricula" type="file" accept=".pdf,.txt,text/plain,application/pdf" />
+                  </label>
+                  <ul id="guia-cursos-detectados" class="list"></ul>
+                </div>
+
+                <div class="card">
+                  <h2>Sílabos de tus cursos</h2>
+                  <div id="guia-silabos"></div>
+                </div>
+
+                <p id="guia-status" class="hint" role="status"></p>
+                <p class="hint">⚠️ Los documentos se envían a la IA para analizarlos. Sube solo lo necesario y quita tus datos personales antes de subirlo.</p>
+              </div>
+
+              <div id="panel-cronograma" class="guia-panel">
+                <h2>Cronograma de estudio</h2>
+                <p class="hint">Las unidades se reparten a lo largo de las 16 semanas del ciclo.</p>
+                <div id="guia-cronograma"></div>
+              </div>
+
+              <div id="panel-tareas" class="guia-panel">
+                <h2>Gestor de tareas</h2>
+                <div id="guia-tareas"></div>
+              </div>
+            </div>
+          </div>
         </section>
 
         <!-- Configuración -->
@@ -311,5 +350,10 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script src="supabase-config.js"></script>
     <script src="social.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+    <script>
+      if (window.pdfjsLib) window.pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js";
+    </script>
+    <script src="guia.js"></script>
   </body>
 </html>
