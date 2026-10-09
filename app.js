@@ -225,6 +225,30 @@ function renderProfiles() {
     : `<li class="hint">Aún no tienes perfiles.</li>`;
 }
 
+// Apodos generados: combinan listas propias y amables, sin palabras que el filtro pueda marcar
+const APODO_ADJETIVOS = ["Estrella", "Soleado", "Tranquila", "Valiente", "Curioso", "Dulce", "Brillante", "Serena", "Alegre", "Amable", "Creativo", "Luminosa"];
+const APODO_SUSTANTIVOS = ["Banana", "Nube", "Luna", "Cometa", "Girasol", "Colibrí", "Río", "Pingüino", "Mariposa", "Planeta", "Arcoíris", "Estudiante"];
+
+function generarApodo() {
+  const elegir = (lista) => lista[Math.floor(Math.random() * lista.length)];
+  const numero = Math.floor(10 + Math.random() * 90);
+  // Ej. "Nube Serena 42": entra en los 30 caracteres del campo
+  return `${elegir(APODO_SUSTANTIVOS)} ${elegir(APODO_ADJETIVOS)} ${numero}`;
+}
+
+$("#profile-auto").addEventListener("click", () => {
+  const profiles = getProfiles();
+  const usados = new Set(profiles.map((p) => p.apodo));
+  let apodo = generarApodo();
+  for (let i = 0; i < 20 && usados.has(apodo); i++) apodo = generarApodo();
+  const genero = Math.random() < 0.5 ? "hombre" : "mujer";
+  const profile = { id: Date.now().toString(36), genero, apodo };
+  profiles.push(profile);
+  store.set("perfiles", profiles);
+  if (!getActiveProfile()) store.set("perfilActivo", profile.id);
+  renderProfiles();
+});
+
 $("#profile-form").addEventListener("submit", (e) => {
   e.preventDefault();
   const apodo = $("#profile-alias").value.trim();
