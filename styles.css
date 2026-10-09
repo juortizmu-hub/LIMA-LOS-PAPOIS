@@ -4,7 +4,7 @@ body {
   margin: 0;
   font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   color: #1f2937;
-  background: #f5f6fa;
+  background: #fdf2f8;
 }
 
 .layout { display: flex; min-height: 100vh; }
@@ -13,7 +13,7 @@ body {
   width: 240px;
   flex-shrink: 0;
   background: #ffffff;
-  border-right: 1px solid #e5e7eb;
+  border-right: 1px solid #fbcfe8;
   padding: 1rem;
   position: sticky;
   top: 0;
@@ -24,7 +24,7 @@ body {
 .brand { font-weight: 700; font-size: 1.2rem; margin-bottom: 1rem; color: #1e3a8a; }
 
 .sidebar nav { display: flex; flex-direction: column; gap: 0.25rem; }
-.sidebar hr { border: none; border-top: 1px solid #e5e7eb; margin: 0.5rem 0; }
+.sidebar hr { border: none; border-top: 1px solid #fbcfe8; margin: 0.5rem 0; }
 
 .nav-item {
   text-align: left;
@@ -36,8 +36,8 @@ body {
   font: inherit;
   color: #374151;
 }
-.nav-item:hover { background: #eef2ff; }
-.nav-item.active { background: #dbeafe; color: #1e3a8a; font-weight: 600; }
+.nav-item:hover { background: #fce7f3; }
+.nav-item.active { background: #1e3a8a; color: #fff; font-weight: 600; }
 
 .content { flex: 1; padding: 2rem; max-width: 900px; }
 
@@ -48,7 +48,7 @@ h1 { margin-top: 0; color: #1e3a8a; }
 
 .card {
   background: #fff;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #fbcfe8;
   border-radius: 12px;
   padding: 1rem;
   display: flex;
@@ -63,7 +63,7 @@ h1 { margin-top: 0; color: #1e3a8a; }
 input[type="text"], textarea, select {
   font: inherit;
   padding: 0.5rem 0.7rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid #f9a8d4;
   border-radius: 8px;
   width: 100%;
 }
@@ -80,8 +80,8 @@ button {
   align-self: flex-start;
 }
 button:hover { background: #1e40af; }
-button.danger { background: #b91c1c; }
-button.danger:hover { background: #991b1b; }
+button.danger { background: #db2777; }
+button.danger:hover { background: #be185d; }
 
 .hint, .disclaimer { color: #6b7280; font-size: 0.9rem; }
 
@@ -90,16 +90,16 @@ button.danger:hover { background: #991b1b; }
   display: inline-block;
   padding: 0.5rem 0.9rem;
   background: #fff;
-  border: 1px solid #d1d5db;
+  border: 1px solid #f9a8d4;
   border-radius: 999px;
   color: #1e3a8a;
   text-decoration: none;
 }
-.social-links a:hover { background: #eef2ff; }
+.social-links a:hover { background: #fce7f3; }
 
 .chat-log {
   background: #fff;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #fbcfe8;
   border-radius: 12px;
   height: 55vh;
   overflow-y: auto;
@@ -110,22 +110,22 @@ button.danger:hover { background: #991b1b; }
   margin-bottom: 0.75rem;
 }
 .msg { max-width: 75%; padding: 0.6rem 0.9rem; border-radius: 12px; white-space: pre-wrap; }
-.msg.user { align-self: flex-end; background: #dbeafe; }
-.msg.bot { align-self: flex-start; background: #f3f4f6; }
+.msg.user { align-self: flex-end; background: #fce7f3; }
+.msg.bot { align-self: flex-start; background: #dbeafe; }
 
 .chat-form { display: flex; gap: 0.5rem; }
 .chat-form input { flex: 1; }
 
-.post { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1rem; margin-bottom: 0.75rem; }
+.post { background: #fff; border: 1px solid #fbcfe8; border-radius: 12px; padding: 1rem; margin-bottom: 0.75rem; }
 .post-meta { font-size: 0.8rem; color: #6b7280; margin-bottom: 0.4rem; }
 .post p { margin: 0; white-space: pre-wrap; }
 
 .list { list-style: none; padding: 0; }
-.list li { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 0.6rem 0.8rem; margin-bottom: 0.5rem; }
+.list li { background: #fff; border: 1px solid #fbcfe8; border-radius: 10px; padding: 0.6rem 0.8rem; margin-bottom: 0.5rem; }
 
 .vision-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.75rem; margin-top: 1rem; }
-.vision-card { background: #fef9c3; border-radius: 12px; padding: 1rem; position: relative; min-height: 100px; }
-.vision-card button { position: absolute; top: 0.3rem; right: 0.3rem; padding: 0.1rem 0.5rem; background: transparent; color: #854d0e; }
+.vision-card { background: #fce7f3; border-radius: 12px; padding: 1rem; position: relative; min-height: 100px; }
+.vision-card button { position: absolute; top: 0.3rem; right: 0.3rem; padding: 0.1rem 0.5rem; background: transparent; color: #9d174d; }
 
 @media (max-width: 720px) {
   .layout { flex-direction: column; }
