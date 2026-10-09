@@ -195,7 +195,7 @@
   const colorValido = (v, defecto) => (HEX.test(v) ? v : defecto);
   const DEFECTO = { modelo: "buddy", emocion: "feliz", accesorio: "ninguno", cuerpo: "#fdd835", detalle: "#1e63c9" };
 
-  function svgPersonaje(e, conColores = true) {
+  function svgPersonaje(e) {
     const modelo = MODELOS.find((m) => m.id === e.modelo) || MODELOS[0];
     const c = {
       cuerpo: colorValido(e.cuerpo, DEFECTO.cuerpo),
