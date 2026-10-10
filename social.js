@@ -89,9 +89,8 @@
       formulario.hidden = false;
       sesion.hidden = true;
     }
-    const puedePublicar = Boolean(usuario);
-    $("#post-form").querySelectorAll("textarea, select, input, button").forEach((el) => (el.disabled = !puedePublicar));
-    $("#post-login-aviso").hidden = puedePublicar;
+    // Los campos siempre se pueden escribir; al publicar sin sesión se pide iniciar sesión
+    $("#post-login-aviso").hidden = Boolean(usuario);
   }
 
   async function iniciarSesion(crear) {
@@ -250,7 +249,10 @@
   // ---------- Publicar ----------
   $("#post-form").addEventListener("submit", async (e) => {
     e.preventDefault();
-    if (!usuario) return;
+    if (!usuario) {
+      alert("Inicia sesión o crea una cuenta arriba para publicar.");
+      return;
+    }
     const texto = $("#post-text").value.trim();
     const identity = $("#post-identity").value;
     const alias = getActiveProfile()?.apodo || "";
